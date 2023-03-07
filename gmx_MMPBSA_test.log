@@ -1,0 +1,31 @@
+[INFO   ] Cloning gmx_MMPBSA repository in /SAN/orengolab/nsp13/md/gmx_mmpbsa_test/gmx_MMPBSA_test
+[INFO   ] Cloning gmx_MMPBSA repository...Done.
+[WARNING] The number cpus defined 10 is greater than the system cpu 8. All the cpus will be used...
+[INFO   ]                           Example                                STATE
+[INFO   ] Protein-Ligand (Single trajectory approximation)               RUNNING
+[INFO   ] Protein-Ligand (Single trajectory approximation)       [ 1/12]    DONE
+[INFO   ] Protein-Protein                                                RUNNING
+[INFO   ] Protein-Protein                                        [ 2/12]    DONE
+[INFO   ] Protein-DNA                                                    RUNNING
+[INFO   ] Protein-DNA                                            [ 3/12]    DONE
+[INFO   ] Protein-Membrane                                               RUNNING
+[ERROR  ] Protein-Membrane                                       [ 4/12]   ERROR
+           Please, check the test log
+           (/SAN/orengolab/nsp13/md/gmx_mmpbsa_test/gmx_MMPBSA_test/examples/Protein_membrane/6.log)
+[INFO   ] Protein-Glycan                                                 RUNNING
+[INFO   ] Protein-Glycan                                         [ 5/12]    DONE
+[INFO   ] Metalloprotein-Peptide                                         RUNNING
+[INFO   ] Metalloprotein-Peptide                                 [ 6/12]    DONE
+[INFO   ] Comp_receptor                                                  RUNNING
+[INFO   ] Comp_receptor                                          [ 7/12]    DONE
+[INFO   ] Protein-Ligand (CHARMM force field)                            RUNNING
+[INFO   ] Protein-Ligand (CHARMM force field)                    [ 8/12]    DONE
+[INFO   ] Alanine Scanning                                               RUNNING
+[INFO   ] Alanine Scanning                                       [ 9/12]    DONE
+[INFO   ] Stability calculation                                          RUNNING
+[INFO   ] Stability calculation                                  [10/12]    DONE
+[INFO   ] Decomposition Analysis                                         RUNNING
+[INFO   ] Decomposition Analysis                                 [11/12]    DONE
+[INFO   ] Interaction Entropy approximation                              RUNNING
+[INFO   ] Interaction Entropy approximation                      [12/12]    DONE
+[INFO   ] Opening gmx_MMPBSA_ana...
