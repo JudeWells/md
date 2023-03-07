@@ -18,7 +18,7 @@ antechamber -i ${LIGNAME}.sdf -fi sdf -o ${LIGNAME}.mol2 -fo mol2 -pf y -s 0 -j 
 # If command above fails consider adding following argument `-nc $MOLCHARGE`
 
 # Start create topology #
-cat <<EOF >ligprep_${LIGNAME}.in
+cat <<EOT >> ligprep_${LIGNAME}.in
 source oldff/leaprc.ff99SB
 source leaprc.gaff
 loadamberparams ${LIGNAME}.frcmod
@@ -27,7 +27,7 @@ check lig
 saveoff lig ${LIGNAME}.lib
 saveamberparm lig ${LIGNAME}.prmtop ${LIGNAME}.rst7
 quit
-EOF
+EOT
 
 parmchk2 -i ${LIGNAME}.mol2 -f mol2 -o ${LIGNAME}.frcmod
 tleap -s -f ligprep_${LIGNAME}.in > ${LIGNAME}_ligprep.out
