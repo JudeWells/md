@@ -216,14 +216,14 @@ def main(i):
     mol2 = "mol2"
     pdbqt = "pdbqt"
     moi = i
-    conv = moi.replace(".pdbqt","")
+    conv = moi.replace(".pdbqt","") # JW remove th suffix in the path
     conv = conv.replace(".mol2","")
     conv = conv.replace(".sdf","")
 
 
     # Setup TMPDIR
-    tmp = os.path.join(os.getcwd(),"tmpdir_{0}".format(conv))
-    loc = os.path.join(os.getcwd(),target)
+    tmp = os.path.join(os.getcwd(),"tmpdir_{0}".format(conv)) # Make a directory with the mol name
+    loc = os.path.join(os.getcwd(),target) # target is path to ligand file
     curr = os.getcwd()
     errors = os.path.join(curr,"errors")
     #checked = os.path.join(curr,"good")
@@ -312,12 +312,12 @@ if __name__ == '__main__':
     parse = parser.parse_args()
 
     with_gauss = parse.method
-    source = parse.source
+    source = parse.source # JW I assume this is the ligand file
     mol_id = parse.mol_id
     protein = parse.protein
     ob = parse.obabel
    
-    target = os.path.join(os.getcwd(),source)
+    target = os.path.join(os.getcwd(),source) # JW target is now path to ligand
     curr = os.getcwd()
 
     # Determine Method
