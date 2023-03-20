@@ -13,14 +13,14 @@ def create_complex_topology(ligand_file, protein_file,  temp_directory, output_d
 
     # Open protein and ligand structure files
     protein_structure = open(f'{output_directory}/{protein_file}.gro', 'r')
-    ligand_structure = open(f'{temp_directory}/{ligand_file}.gro', 'r')
+    ligand_structure = open(f'{output_directory}/{ligand_file}.gro', 'r')
 
     # Create new file for the complex
-    complex_structure = open(f'{temp_directory}/complex.gro', 'w')
+    complex_structure = open(f'{output_directory}/complex.gro', 'w')
 
     # Open ligand topology files for reading and writing
-    ligand_topology_file = open(f'{temp_directory}/{ligand_file}.top', 'r')
-    new_ligand_topology_file = open(f'{temp_directory}/{ligand_file}.itp', 'w')
+    ligand_topology_file = open(f'{output_directory}/{ligand_file}.top', 'r')
+    new_ligand_topology_file = open(f'{output_directory}/{ligand_file}.itp', 'w')
 
     # Read lines from protein and ligand structure files
     protein_lines = protein_structure.readlines()
@@ -81,7 +81,7 @@ def create_complex_topology(ligand_file, protein_file,  temp_directory, output_d
             else:
                 new_topology.append(i)
     new_topology.append(ligand_name)
-    with open(f'{temp_directory}/topol.top', 'w') as f:
+    with open(f'{output_directory}/topol.top', 'w') as f:
         f.writelines(new_topology)
 
 if __name__ == "__main__":

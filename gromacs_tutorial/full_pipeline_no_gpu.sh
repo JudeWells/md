@@ -9,11 +9,23 @@
 # 2. the ligand in pdb format
 # example usage:
 # ./prepare.sh 3HTB jz4
+# on the cluster conda environments can be found here: /SAN/orengolab/nsp13/.conda/envs
+#
 
 # These paths are for macbook
 export PATH=/Applications/gromacs-2022/build/bin:$PATH
 source /usr/local/gromacs/bin/GMXRC
 # end macbook paths
+
+### these paths are for the cluster:
+export PATH=/SAN/orengolab/nsp13/
+export PROJECT_USER=shared
+export PROJECT_DIR=/SAN/orengolab/nsp13
+export PROJECT_HOME=${PROJECT_DIR}/${PROJECT_USER}
+# activate source files so that conda and vina executables can be found
+source $PROJECT_HOME/source_files/conda.source
+conda activate gmxMMPBSA/
+### end cluster paths
 
 PROTNAME=$1
 LIGNAME=$2
@@ -33,7 +45,7 @@ antechamber -i ${OUTDIR}/${LIGNAME}.sdf -fi sdf -o ${OUTDIR}/${LIGNAME}.mol2 -fo
 # Start create topology #
 echo "source oldff/leaprc.ff99SB
 source leaprc.gaff
-loadamberparams ${LIGNAME}.frcmod
+loadamberparams ${OUTDIR}/${LIGNAME}.frcmod
 lig = loadmol2 ${OUTDIR}/${LIGNAME}.mol2
 check lig
 saveoff lig ${OUTDIR}/${LIGNAME}.lib
@@ -50,7 +62,7 @@ python jw_convert_gmx.py -i ${OUTDIR}/${LIGNAME}.prmtop
 # End convert to Gromacs #
 
 # Create complex file
-python jw_create_complex_topology.py --ligand ${OUTDIR}/${LIGNAME} --protein ${PROTNAME} --output ${OUTDIR}
+python jw_create_complex_topology.py --ligand ${LIGNAME} --protein ${PROTNAME} --output ${OUTDIR}
 # Move the following files to the working directory
 # complex.gro
 # topol.top
