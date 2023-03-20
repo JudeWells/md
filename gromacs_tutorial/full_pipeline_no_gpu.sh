@@ -12,17 +12,16 @@
 # on the cluster conda environments can be found here: /SAN/orengolab/nsp13/.conda/envs
 #
 
-# These paths are for macbook
-export PATH=/Applications/gromacs-2022/build/bin:$PATH
-source /usr/local/gromacs/bin/GMXRC
-# end macbook paths
+## These paths are for macbook
+#export PATH=/Applications/gromacs-2022/build/bin:$PATH
+#source /usr/local/gromacs/bin/GMXRC
+## end macbook paths
 
 ### these paths are for the cluster:
 export PATH=/SAN/orengolab/nsp13/
 export PROJECT_USER=shared
 export PROJECT_DIR=/SAN/orengolab/nsp13
 export PROJECT_HOME=${PROJECT_DIR}/${PROJECT_USER}
-# activate source files so that conda and vina executables can be found
 source $PROJECT_HOME/source_files/conda.source
 conda activate gmxMMPBSA/
 ### end cluster paths
@@ -72,7 +71,7 @@ python jw_create_complex_topology.py --ligand ${LIGNAME} --protein ${PROTNAME} -
 $BASE=.
 cd $TMPDIR
 # Create new box
-gmx editconf -f complex.gro -o box.gro -bt dodecahedron -c
+gmx editconf -f ${OUTDIR}/complex.gro -o ${OUTDIR}/box.gro -bt dodecahedron -c
 
 # Solvate
 gmx solvate -cp box.gro -cs spc216.gro -o solv.gro -p $topol.top
