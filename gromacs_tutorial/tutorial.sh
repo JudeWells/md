@@ -39,6 +39,12 @@ python jw_convert_gmx.py -i ${LIGNAME}.prmtop
 
 # Create complex file
 python jw_create_complex_topology.py --ligand ${LIGNAME} --protein ${PROTNAME}
+# Move the following files to the working directory
+# complex.gro
+# topol.top
+# ${LIGNAME}.itp
+
+
 
 
 
