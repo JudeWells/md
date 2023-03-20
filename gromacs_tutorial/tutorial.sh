@@ -44,8 +44,66 @@ python jw_create_complex_topology.py --ligand ${LIGNAME} --protein ${PROTNAME}
 # topol.top
 # ${LIGNAME}.itp
 
+# DF's prepare.sh script starts here
+$BASE=.
+cd $TMPDIR
+# Create new box
+gmx_cuda editconf -f complex.gro -o box.gro -bt dodecahedron -c
 
+# Solvate
+gmx_cuda solvate -cp box.gro -cs spc216.gro -o solv.gro -p topol.top
 
+# Add Ions
+gmx_cuda grompp -f $$BASE/source/ions.mdp -c solv.gro -p topol.top -o ions.tpr
+echo SOL | gmx_cuda genion -s ions.tpr -o solv_ions.gro -p topol.top -pname NA -nname CL -neutral -conc 0.15
+
+# Load Fast Gromacs Modules
+
+export GMX_FORCE_UPDATE_DEFAULT_GPU=true
+
+# Energy Minimization
+gmx_cuda grompp -f $BASE/source/em_steep.mdp -c solv_ions.gro -p topol.top -o em.tpr -maxwarn -1
+gmx_cuda mdrun -nb gpu -deffnm em -ntmpi 1 -ntomp 10 -pin on
+
+# NVT Equilibration
+gmx_cuda grompp -f $BASE/source/nvt.mdp -c em.gro -r em.gro -p topol.top -o nvt.tpr -maxwarn -1
+gmx_cuda mdrun -nb gpu -deffnm nvt -ntmpi 1 -ntomp 10 -pin on
+
+# NPT Equilibration
+gmx_cuda grompp -f $BASE/source/npt.mdp -c nvt.gro -r nvt.gro -p topol.top -o npt.tpr -maxwarn -1
+gmx_cuda mdrun -deffnm npt -pin on -nb gpu -bonded gpu -pme gpu -nstlist 400 -ntmpi 1 -ntomp 10
+
+# Production MD (1 ns)
+gmx_cuda grompp -f $BASE/source/md.mdp -c npt.gro -r npt.gro -p topol.top -o md.tpr -maxwarn -1
+gmx_cuda mdrun -deffnm md -pin on -nb gpu -bonded gpu -pme gpu -nstlist 400 -ntmpi 1 -ntomp 10
+
+# Make Index and Center TRJ for MMGBSA
+echo -e "1 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 \n q" | gmx_cuda make_ndx -f md.gro -o $TMPDIR/index.ndx
+echo 1 0 | gmx_cuda trjconv -f md.xtc -o md_c.xtc -s md.tpr -pbc mol -center
+
+# Save files
+RESULTSDIR=$BASE/results/$LIGNAME
+mkdir -p $RESULTSDIR
+cp $TMPDIR/md.gro $RESULTSDIR
+cp $TMPDIR/md.tpr $RESULTSDIR
+cp $TMPDIR/md.xtc $RESULTSDIR
+cp $TMPDIR/md_c.xtc $RESULTSDIR
+cp $TMPDIR/topol.top $RESULTSDIR
+cp $TMPDIR/index.ndx $RESULTSDIR
+cp $TMPDIR/*.itp $RESULTSDIR
+cp -r $TMPDIR/amber99sb-ildn_zn.ff $RESULTSDIR/
+# DF's prepare.sh script ends here
+
+# DF's prepare_mm.sh script starts here
+#Convert TRJ
+cd $TMPDIR
+echo -e "1 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 \n q" | gmx make_ndx -f $res/md.gro -o $TMPDIR/index.ndx
+
+#MMGBSA (mpirun is message passing interface for parallelization)
+mpirun gmx_MMPBSA MPI -O -i $base/mmgbsa.in -cs $res/md.tpr -ci $TMPDIR/index.ndx -cg 42 22 -ct $res/md_c.xtc -cp $res/topol.top -o $TMPDIR/lig_$d.dat -nogui
+
+cp $TMPDIR/lig_$d.dat $RESULTSDIR
+# DF's prepare_mm.sh script ends here
 
 
 
