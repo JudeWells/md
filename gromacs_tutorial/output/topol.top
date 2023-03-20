@@ -1,19 +1,19 @@
 ;
-;	File 'topol.top' was generated
-;	By user: root (501)
-;	On host: eduroam-int-dhcp-97-28-48.ucl.ac.uk
-;	At date: Fri Mar  3 21:56:29 2023
+;	File 'output/topol.top' was generated
+;	By user: judewells (501)
+;	On host: eduroam-int-dhcp-97-23-147.ucl.ac.uk
+;	At date: Mon Mar 20 14:58:33 2023
 ;
 ;	This is a standalone topology file
 ;
 ;	Created by:
 ;	                     :-) GROMACS - gmx pdb2gmx, 2022 (-:
 ;	
-;	Executable:   /Applications/gromacs-2022/build/bin/gmx
+;	Executable:   /usr/local/gromacs/bin/gmx
 ;	Data prefix:  /usr/local/gromacs
 ;	Working dir:  /Users/judewells/Documents/dataScienceProgramming/md/gromacs_tutorial
 ;	Command line:
-;	  gmx pdb2gmx -f 3HTB_clean.pdb -o 3HTB_processed.gro -ff charmm36_mar2019 -water tip3p
+;	  gmx pdb2gmx -f 3HTB_clean.pdb -o output/3HTB_clean.gro -p output/topol.top -i output/posre.itp -ff charmm36_mar2019 -water tip3p
 ;	Force field was read from current directory or a relative path - path added.
 ;
 
@@ -24599,7 +24599,7 @@ Protein_chain_A     3
 
 ; Include Position restraint file
 #ifdef POSRES
-#include "posre.itp"
+#include "output/posre.itp"
 #endif
 
 ; Include water topology
