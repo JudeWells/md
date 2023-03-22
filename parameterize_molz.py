@@ -57,7 +57,7 @@ def create_dft_input(mol,tmp,loc):
 
 def create_complex_topo(mol,tmp,curr):
     # Open Protein and Ligand Structure file
-
+    # note that this expects there to be a protein.gro in the current directory
     input_prot = protein
     input_lig = mol
 
@@ -197,7 +197,7 @@ def bcc(mol,tmp,curr):
             call = result.stdout.decode()
             call2 = result.stderr.decode()
             try:
-                os.mkdir(errors)
+                os.makedirs(errors, exist_ok=True)
             except:
                 next
             with open("{0}/{1}_err.out".format(errors,mol),"w") as f:
@@ -225,13 +225,14 @@ def main(i):
     tmp = os.path.join(os.getcwd(),"tmpdir_{0}".format(conv)) # Make a directory with the mol name
     loc = os.path.join(os.getcwd(),target) # target is path to ligand file
     curr = os.getcwd()
-    errors = os.path.join(curr,"errors")
+    errors = os.path.join(curr, "errors")
     #checked = os.path.join(curr,"good")
     try:
-        shutil.rmtree(tmp)
+        # shutil.rmtree(tmp) # JW TODO REMEMBER TO UNCOMMENT THIS IN PRODUCTION
+        pass
     except:
         next
-    os.mkdir(tmp)
+    os.makedirs(tmp, exist_ok=True)
     #os.chdir(tmp)
     
     # Convert PDBQT
@@ -244,7 +245,7 @@ def main(i):
             shutil.copy("{0}/{1}".format(loc,moi),"{0}/{1}.mol2".format(tmp,conv))
         else:
             convert_pdbqt(loc,conv,tmp,mol2)
-    elif ".sdf" in moi:
+    elif ".sdf" in moi: # copy ligand file to tmpdir
         shutil.copy("{0}/{1}.sdf".format(loc,conv),"{0}/{1}1.sdf".format(tmp,conv))
     else:
         raise ("ERROR")
@@ -270,7 +271,7 @@ def main(i):
         ready = os.path.join(curr,"ready")
         new_d = os.path.join(ready,moi)
         try:
-            os.mkdir(new_d)
+            os.makedirs(new_d, exist_ok=True)
         except:
             next
 
@@ -290,7 +291,7 @@ def main(i):
 
 
     os.chdir(curr)
-    shutil.rmtree(tmp)
+    # shutil.rmtree(tmp) # JW TODO REMEMBER TO UNCOMMENT THIS IN PRODUCTION
 
 
 if __name__ == '__main__':
