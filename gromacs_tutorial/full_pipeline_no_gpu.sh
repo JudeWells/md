@@ -51,6 +51,8 @@ saveoff lig ${OUTDIR}/${LIGNAME}.lib
 saveamberparm lig ${OUTDIR}/${LIGNAME}.prmtop ${OUTDIR}/${LIGNAME}.rst7
 quit" >> ${OUTDIR}/ligprep_${LIGNAME}.in
 
+# This line of code uses the parmchk2 utility from AmberTools to generate forcefield params for ligand
+# AMBER frcmod format is the output here
 parmchk2 -i ${OUTDIR}/${LIGNAME}.mol2 -f mol2 -o ${OUTDIR}/${LIGNAME}.frcmod
 tleap -s -f ${OUTDIR}/ligprep_${LIGNAME}.in > ${OUTDIR}/${LIGNAME}_ligprep.out
 # End create topology #
@@ -67,6 +69,7 @@ python jw_create_complex_topology.py --ligand ${LIGNAME} --protein ${PROTNAME} -
 # topol.top
 # ${LIGNAME}.itp
 
+####### END OF PYTHON SCRIPTS #########
 # DF's prepare.sh script starts here
 $BASE=.
 cd $TMPDIR
@@ -74,10 +77,11 @@ cd $TMPDIR
 gmx editconf -f ${OUTDIR}/complex.gro -o ${OUTDIR}/box.gro -bt dodecahedron -c
 
 # Solvate
-gmx solvate -cp box.gro -cs spc216.gro -o solv.gro -p $topol.top
+gmx solvate -cp ${OUTDIR}/box.gro -cs spc216.gro -o ${OUTDIR}/solv.gro -p ${OUTDIR}/topol.top
 
 # Add Ions
-gmx grompp -f $$BASE/source/ions.mdp -c solv.gro -p topol.top -o ions.tpr
+cp
+gmx grompp -f ions.mdp -c ${OUTDIR}/solv.gro -p ${OUTDIR}/topol.top -o ${OUTDIR}/ions.tpr
 echo SOL | gmx genion -s ions.tpr -o solv_ions.gro -p topol.top -pname NA -nname CL -neutral -conc 0.15
 
 # Load Fast Gromacs Modules
